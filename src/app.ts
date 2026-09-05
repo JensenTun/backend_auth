@@ -6,7 +6,7 @@ import { errorHandler } from './middlewares/error.middleware.js';
 const app: Application = express();
 
 // Middlewares
-app.use(cors({ origin: process.env.FRONTEND_URL || '*', credentials: true, }));
+app.use(cors({ origin: process.env.FRONTEND_URL || '*' }));
 app.use(express.json());
 
 // Routes
