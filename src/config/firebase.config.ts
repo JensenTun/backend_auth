@@ -1,6 +1,6 @@
-import { initializeApp, cert } from 'firebase-admin/app';
-import { getAuth } from 'firebase-admin/auth';
-import { getFirestore } from 'firebase-admin/firestore';
+import { initializeApp, cert, getApps, App } from 'firebase-admin/app';
+import { getAuth, Auth } from 'firebase-admin/auth';
+import { getFirestore, Firestore } from 'firebase-admin/firestore';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -13,20 +13,17 @@ if (!FIREBASE_PROJECT_ID || !FIREBASE_CLIENT_EMAIL || !FIREBASE_PRIVATE_KEY) {
 
 const formattedPrivateKey = FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n');
 
-// Initialize Firebase App
-const app = initializeApp({
-    credential: cert({
-        projectId: FIREBASE_PROJECT_ID,
-        clientEmail: FIREBASE_CLIENT_EMAIL,
-        privateKey: formattedPrivateKey,
-    }),
-});
+// Prevent duplicate initialization in serverless environments or hot-reloading
+const app: App = getApps().length === 0
+    ? initializeApp({
+        credential: cert({
+            projectId: FIREBASE_PROJECT_ID,
+            clientEmail: FIREBASE_CLIENT_EMAIL,
+            privateKey: formattedPrivateKey,
+        }),
+    })
+    : getApps()[0];
 
 // Export Services
-export const auth = getAuth(app);
-export const db = getFirestore(app);
-
-
-
-
-
+export const auth: Auth = getAuth(app);
+export const db: Firestore = getFirestore(app);

@@ -5,6 +5,8 @@ import rateLimit from 'express-rate-limit';
 import { authRoutes } from './routes/auth.routes.js';
 import { userRoutes } from './routes/user.routes.js';
 import { errorHandler } from './middlewares/error.middleware.js';
+import { portfolioRoutes } from './routes/portfolio.routes.js';
+import { adminRoutes } from './routes/admin.routes.js';
 
 const app: Application = express();
 
@@ -49,7 +51,8 @@ app.use(express.json({ limit: '10kb' })); // Payload Size Limit လုပ်ခ�
 // 4. Routes
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/users', userRoutes);
-
+app.use('/api/v1/portfolio', portfolioRoutes)
+app.use('/api/v1/admin', adminRoutes)
 // Health Check Endpoint
 app.get('/health', (_req, res) => {
     res.status(200).json({ status: 'OK', uptime: process.uptime() });
